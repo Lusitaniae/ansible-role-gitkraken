@@ -6,7 +6,7 @@
     dest: '{{ gitkraken_download_dir }}'
 
 - name: ensure ca-certificates installed
-  become: yes
+  become: true
   apt:
     name: ca-certificates
     state: present
@@ -32,7 +32,7 @@
     url: '{{ gitkraken_redis_url }}'
     method: HEAD
     follow_redirects: safe
-  check_mode: no
+  check_mode: false
   register: head_query
 
 - name: set latest etag fact
@@ -44,8 +44,8 @@
     url: '{{ gitkraken_redis_url }}'
     dest: '{{ gitkraken_download_dir }}/{{ gitkraken_redis_filename }}'
     force: '{{ gitkraken_latest_etag != gitkraken_existing_etag }}'
-    use_proxy: yes
-    validate_certs: yes
+    use_proxy: true
+    validate_certs: true
     mode: 'u=rw,go=r'
 
 - name: update etag file
@@ -54,12 +54,12 @@
     dest: '{{ gitkraken_etag_path }}'
 
 - name: install GitKraken dependencies
-  become: yes
+  become: true
   apt:
     name: gvfs-bin
     state: present
 
 - name: install GitKraken
-  become: yes
+  become: true
   apt:
     deb: '{{ gitkraken_download_dir }}/{{ gitkraken_redis_filename }}'
